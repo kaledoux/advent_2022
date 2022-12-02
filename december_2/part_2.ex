@@ -7,14 +7,13 @@
 # the new total is
 
 defmodule DataHelper do
-  @move_codes %{
-    "A" => :rock,
-    "B" => :paper,
-    "C" => :scissors,
-    "X" => :lose,
-    "Y" => :draw,
-    "Z" => :win
-  }
+  def move_codes("A"), do: :rock
+  def move_codes("B"), do: :paper
+  def move_codes("C"), do: :scissors
+  def move_codes("X"), do: :lose
+  def move_codes("Y"), do: :draw
+  def move_codes("Z"), do: :win
+
   def file_to_move_stream(file_name) do
     {:ok, file} = File.read(file_name)
 
@@ -22,20 +21,12 @@ defmodule DataHelper do
     |> String.split("\n")
     |> Stream.map(&String.split/1)
     |> Stream.map(fn [opponent | player] ->
-      [@move_codes[opponent], @move_codes[List.first(player)]]
+      [move_codes(opponent), move_codes(List.first(player))]
     end)
   end
 end
 
 defmodule TTT do
-  @move_needed %{
-    rock: %{lose: :scissors, draw: :rock, win: :paper},
-    paper: %{lose: :rock, draw: :paper, win: :scissors},
-    scissors: %{lose: :paper, draw: :scissors, win: :rock}
-  }
-  @move_points %{rock: 1, paper: 2, scissors: 3}
-  @match_result_points %{lose: 0, draw: 3, win: 6}
-
   def point_total(match_stream) do
     match_stream
     |> Stream.map(&points_for_match/1)
@@ -46,8 +37,28 @@ defmodule TTT do
     opponent = List.first(match)
     player = List.last(match)
 
-    @match_result_points[player] + @move_points[@move_needed[opponent][player]]
+    match_result_points(player) + move_points(move_needed(opponent, player))
   end
+
+  def move_needed(:rock, :lose), do: :scissors
+  def move_needed(:rock, :draw), do: :rock
+  def move_needed(:rock, :win), do: :paper
+
+  def move_needed(:paper, :lose), do: :rock
+  def move_needed(:paper, :draw), do: :paper
+  def move_needed(:paper, :win), do: :scissors
+
+  def move_needed(:scissors, :lose), do: :paper
+  def move_needed(:scissors, :draw), do: :scissors
+  def move_needed(:scissors, :win), do: :rock
+
+  def move_points(:rock), do: 1
+  def move_points(:paper), do: 2
+  def move_points(:scissors), do: 3
+
+  def match_result_points(:lose), do: 0
+  def match_result_points(:draw), do: 3
+  def match_result_points(:win), do: 6
 end
 
 file = DataHelper.file_to_move_stream("data.txt")
