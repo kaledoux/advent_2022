@@ -79,7 +79,7 @@ defmodule DataHelper do
   end
 end
 
-defmodule TTT do
+defmodule RPS do
   @matchup_results %{
     rock: %{rock: :draw, paper: :lose, scissors: :win},
     paper: %{rock: :win, paper: :draw, scissors: :lose},
@@ -107,5 +107,5 @@ end
 
 file = DataHelper.file_to_move_stream("data.txt")
 
-TTT.point_total(file)
+RPS.point_total(file)
 |> IO.inspect()

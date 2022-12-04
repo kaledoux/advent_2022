@@ -26,7 +26,7 @@ defmodule DataHelper do
   end
 end
 
-defmodule TTT do
+defmodule RPS do
   def point_total(match_stream) do
     match_stream
     |> Stream.map(&points_for_match/1)
@@ -63,5 +63,5 @@ end
 
 file = DataHelper.file_to_move_stream("data.txt")
 
-TTT.point_total(file)
+RPS.point_total(file)
 |> IO.inspect()
